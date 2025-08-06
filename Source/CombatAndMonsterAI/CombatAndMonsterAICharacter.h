@@ -44,6 +44,9 @@ class ACombatAndMonsterAICharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ShiftlockAction;
+
 public:
 	ACombatAndMonsterAICharacter();
 	
@@ -55,6 +58,8 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	void Shiftlock(const FInputActionValue& Value);
 			
 
 protected:

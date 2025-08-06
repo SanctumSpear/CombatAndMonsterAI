@@ -23,8 +23,8 @@ ACombatAndMonsterAICharacter::ACombatAndMonsterAICharacter()
 		
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = true;
-	bUseControllerRotationRoll = true;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -85,6 +85,9 @@ void ACombatAndMonsterAICharacter::SetupPlayerInputComponent(UInputComponent* Pl
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACombatAndMonsterAICharacter::Look);
+
+		// Shiftlocking
+		EnhancedInputComponent->BindAction(ShiftlockAction, ETriggerEvent::Triggered, this, &ACombatAndMonsterAICharacter::Shiftlock);
 	}
 	else
 	{
@@ -126,4 +129,18 @@ void ACombatAndMonsterAICharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ACombatAndMonsterAICharacter::Shiftlock(const FInputActionValue& Value) {
+	static float LastToggleTime = 0.0f;
+	float CurrentTime = GetWorld()->GetTimeSeconds();
+
+	// Prevent rapid toggling (debounce for 0.2 seconds)
+	if (CurrentTime - LastToggleTime < 0.2f) {
+		return;
+	}
+
+	LastToggleTime = CurrentTime;
+	bUseControllerRotationYaw = !bUseControllerRotationYaw;
+	bUseControllerRotationRoll = !bUseControllerRotationRoll;
 }
